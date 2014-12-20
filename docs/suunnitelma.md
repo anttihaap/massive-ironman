@@ -9,5 +9,5 @@ LejOS. Robotti lähettää tietoa bluetoothin välityksellä läppäriin. Robott
 <b>Ongelmia:</b>
 Ainakin labyrintin ulospääsy tulee merkitä eri tavoin kuin risteykset ja umpikujat. Risteykset ja umpikujat täytyy ehkä myös merkitä. Robotin toiminta risteyksessä voi osoittautua haastavaksi. Ongelmaksi voi muodostua valosensorin puutteet. Värisensorilla olisi helppoa toteuttaa monta merkintää. Nopein tapa selviytyä labyrintista tulee myös selvittää, mikä tuottaa haasteita.
 
-Lopullisen työn laajuus ja aihe selvinnee projektin edetessä.
+Lopullisen työn laajuus ja aihe tarkentuu projektin edetessä.
 
