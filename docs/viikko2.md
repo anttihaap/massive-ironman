@@ -1,1 +1,8 @@
- 
+#Viikko 2
+Projekti on edistynyt ihan hyvin. Robottini seuraa viivaa risteykseen saakka (tunnistaa viivan loppumisen) ja etenee risteyksen keskelle. Risteyksessä robotti tunnistaa mahdolliset reitit tekemällä 360 asteen käännöksen, jonka jälkeen valitsee aina oikean käännöksen. Labyrintti tällä hetkellä koostuu neliöstä, eli robotti pyörii labyrintissa ympyrää tunnistaen risteyksien reittejä. Reittien tunnistaminen toimii nyt hyvin ja virhetilanteita ei synny enää. 
+
+Seuraavan viikon tavoitteena on tehdä luokka, joka kertoo robotille miten edetä järkevästi syklittömässä labyrintissa (syklillinen myöhemmin). Ajatuksena on, että luokka pitää sisällään pinon, johon pinotaan edellisiä risteyksiä. Kun tietyn risteyksen kaikki reitit ollaan kokeiltu, poistaa luokka pinosta risteyksen ja robotti siirtyy edelliseen risteykseen pinossa ja kokeilee kyseisen risteyksen muita reittejä. Jos pino on tyhjä (alkua ei lasketa), labyrintilla ei ole ratkaisua.
+
+Suurin haaste viikolla oli tunnistaa monta moottorin kierrosta vastaa 360 asteen käännöstä ja monta moottorin käännöstä vastaa reittien kohtia. Näiden arvojen avulla pysty määrittelemään esimerkiksi oikean ja vasemman käännöksen väliarvon (45 astetta). Kun robotti kääntyy oikealle, kääntyy robotti ensin oikean ja vasemman käännöksen väliarvoon (~45 astetta) ja jatkaa kääntymistä kunnes löytää mustan viivan. Tämän jälkeen robootti jatkaa viivan seuraamista. Moottorien käännösten arvot eivät ole täsmällisiä ja arvot heittelevät, mutta on nyt tarpeeksi tarkka ja virhetilanteita ei synny.
+
+Ohjelmointiympäristö toimii ja koodi päätyi gittiin.
