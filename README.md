@@ -1,5 +1,4 @@
 massive-ironman
 ===============
 
-Joulun robokurssin 2014 pohja
-TEST
+Joulun robokurssi 2014
