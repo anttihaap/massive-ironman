@@ -23,7 +23,7 @@ public class Labyrintinratkaisija {
 		viivanseuraaja.seuraaViivaLoppuun();
 		moottorit.liikuEteenpain(150, 80);
 		etsiRisteydenHaarat();
-		kaannySuuntaanRisteydessa(3);
+		kaannySuuntaanRisteydessa(-1);
 		moottorit.pysahdy();
 		try {
 			Thread.sleep(10000);
@@ -40,18 +40,17 @@ public class Labyrintinratkaisija {
 		
 		int waitKaant = 0;
 		boolean teipilla = valosensori.onkoTeipilla();
-		String loppuSyote = "";
-		while (moottorit.vasenKierrokset() < 1060) {
-			if (waitKaant < moottorit.vasenKierrokset() && teipilla) {
+		Risteys r = new Risteys();
+		while (moottorit.vasenKierrokset() < Moottorinkierrokset.ympyra) {
+			if (waitKaant < moottorit.vasenKierrokset() && valosensori.onkoTeipilla()) {
 				int kierrokset = moottorit.vasenKierrokset();
-				if (kierrokset < 100) {
-					loppuSyote += "y ";
-				} else if (kierrokset < 364) {
-					loppuSyote += "o ";
-				} else if (kierrokset < 640) {
-					loppuSyote += "a ";
-				} else if (kierrokset < 900) {
-					loppuSyote += "v ";
+				if (kierrokset < Moottorinkierrokset.) {
+					r.lisaaSuunta(0);;
+				} else if (kierrokset < Moottorinkierrokset.oikeaAlazVali) {
+					r.lisaaSuunta(1);
+				} else if (kierrokset < Moottorinkierrokset.oikeaAlasVali) {
+				} else if (kierrokset < Moottorinkierrokset.alasVasenVali) {
+					r.lisaaSuunta(-1);
 				}
 				waitKaant = moottorit.vasenKierrokset() + 200;
 				Sound.playTone(1000, 100, 100);
@@ -60,10 +59,10 @@ public class Labyrintinratkaisija {
 			teipilla = valosensori.onkoTeipilla();
 		}
 		
-		LCD.drawString(loppuSyote, 0, 0);
+		LCD.drawString(r.toString(), 0, 0);
 		moottorit.pysahdy();
 	}
-	//suoraan: 0, oikea: 1, alas: 2, vasen: 3
+	//suoraan: 0, oikea: 1, alas: 2, vasen: -1
 	private void kaannySuuntaanRisteydessa(int suunta) {
 		int kierroksetRajaan;
 		if (suunta == 0) {
@@ -72,7 +71,7 @@ public class Labyrintinratkaisija {
 			kierroksetRajaan = 100;
 		} else if (suunta == 2) {
 			kierroksetRajaan = 364;
-		} else if (suunta == 3) {
+		} else if (suunta == -1) {
 			kierroksetRajaan = 640;
 		} else {
 			kierroksetRajaan = -1;
