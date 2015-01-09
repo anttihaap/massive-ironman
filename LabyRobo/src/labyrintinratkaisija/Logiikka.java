@@ -2,9 +2,8 @@ package labyrintinratkaisija;
 
 import java.util.Stack;
 
-/*
- * Pahasti kesken.
- */
+import laitehallinta.Virhetilanne;
+
 public class Logiikka {
 	
 	private Stack<Risteys> risteydet;
@@ -24,57 +23,48 @@ public class Logiikka {
 	}
 	
 	public void lisaaUusiRisteys(Risteys r) {
-		seuraavaUusiRisteys = false;
+		seuraavaUusiRisteys = true;
 		risteydet.push(r);
 	}
 	
-	   public int liikuSuuntaan() {
-	        //Mennään uuteen risteykseen, mikäli ei palata taakseppäin.
-	        seuraavaUusiRisteys = true;
+	public int liikuSuuntaan() {
 	        Risteys r = risteydet.pop();
-	        int seuraavaKaannos = r.palautaSuunta();
+	        int seuraavaKaannos = oikeaSuuntaKaannos(r.palautaSuunta());
 	        
-	        //seuraava käännös alaspain, risteyden kaikki vaihtoehdot käyty
-	        //risteys pois pinosta
-	        if (seuraavaKaannos != 2) {
-	            risteydet.push(r);
+	        if (risteydet.isEmpty() && r.kaikkiKayty()) Virhetilanne.virhe("ohi on");
+	        
+	        //Seurarava käännös takaisin mistä tultiin risteykseen
+	        //Kaikki vaihtoehdot on käyty.
+	        if (r.kaikkiKayty()) {
+	        	//Seuraava risteys ei siis ole uusi.
+	        	seuraavaUusiRisteys = false;
+	        } else { 	
+	        	//Muuten uusi risteys ja risteys takaisin stäkkiin.
+	        seuraavaUusiRisteys = true;
+	        risteydet.push(r);
 	        }
-	        return palautaOikeaSuunta(seuraavaKaannos);
+	        paivitaRobotinSuunta(seuraavaKaannos);
+	        return seuraavaKaannos;
 	    }
 	    
-	    public int palautaOikeaSuunta(int suunta) {
-	        if (robotinSuunta == 0) return suunta;
-	        if (robotinSuunta < 0) {
-	            suunta +=1;
-	            if (suunta == 3) {
-	                suunta = -1;
-	            }
-	        } else {
-	            for (int i = 0; i < robotinSuunta; i++) {
-	                suunta -= 1;
-	                if (suunta == -2) {
-	                    suunta = 2;
-	                }
-	            }
-	        }
-	        return suunta;
+	    public int oikeaSuuntaRisteys(int suunta) {
+	    	return Suunnat.kaannaSuuntaa(suunta, robotinSuunta);
 	    }
 	    
-	    public void paivitaSuunta(int robotinKaannos) {
-	        if (robotinKaannos == 0) return;
-	        if (robotinKaannos < 0) {
-	            robotinSuunta -=1;
-	            if (robotinSuunta == -2) {
-	                robotinSuunta = 2;
-	            }
-	        } else {
-	            for (int i = 0; i < robotinKaannos; i++) {
-	                robotinSuunta +=1;
-	                if (robotinSuunta == 3) {
-	                    robotinSuunta = -1;
-	                }
-	            }
-	        }       
+	    public int oikeaSuuntaKaannos(int suunta) {
+	    	return Suunnat.kaannaSuuntaa(suunta, robotinSuunta * -1);
+	    }
+	    
+	    /* 
+	     * Päivittää robotin suunnan.
+	     * Eli kääntää robotinSuuntaa robotinKaannoksen verran.
+	     */
+	    public void paivitaRobotinSuunta(int robotinKaannos) {
+	    	robotinSuunta = Suunnat.kaannaSuuntaa(robotinSuunta, robotinKaannos);
+	    }
+	    
+	    public int palautaRobotinSuunta() {
+	    	return robotinSuunta;
 	    }
 
 }

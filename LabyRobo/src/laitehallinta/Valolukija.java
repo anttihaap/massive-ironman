@@ -8,8 +8,8 @@ public class Valolukija {
 	private LightSensor sensori;
 	private int teippiLattiaRajaarvo;
 	
-	public Valolukija(SensorPort s, int lattianValoarvo, int teipinValoarvo) {
-		sensori = new LightSensor(s);
+	public Valolukija(int lattianValoarvo, int teipinValoarvo) {
+		sensori = new LightSensor(LaitePortit.valosensori);
 		sensori.setFloodlight(true);
 		teippiLattiaRajaarvo = (lattianValoarvo-teipinValoarvo) / 2 + teipinValoarvo;
 	}

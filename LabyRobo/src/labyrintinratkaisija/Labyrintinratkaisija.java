@@ -1,6 +1,7 @@
 package labyrintinratkaisija;
 
-import laitehallinta.Moottorienhallinta;
+import laitehallinta.Moottorit;
+import laitehallinta.Nuku;
 import laitehallinta.Valolukija;
 import lejos.nxt.*;
 
@@ -8,79 +9,83 @@ public class Labyrintinratkaisija {
 	
 	private final int lattianValoarvo = 49;
 	private final int teipinValoarvo = 39;
-	private Moottorienhallinta moottorit;
 	private Valolukija valosensori;
 	private Viivanseuraaja viivanseuraaja;
+	private Logiikka logiikka;
 	
-	public Labyrintinratkaisija(MotorPort oikeaMoottori, MotorPort vasenMoottori, SensorPort valonPortti) {
-		moottorit = new Moottorienhallinta(oikeaMoottori, vasenMoottori);
-		valosensori = new Valolukija(valonPortti, lattianValoarvo, teipinValoarvo);
-		viivanseuraaja = new Viivanseuraaja(moottorit, valosensori);
+	public Labyrintinratkaisija() {
+		valosensori = new Valolukija(lattianValoarvo, teipinValoarvo);
+		viivanseuraaja = new Viivanseuraaja(valosensori);
+		logiikka = new Logiikka();
 	}
 	
-	public void aloita() {		
-		while (!Button.ENTER.isPressed()) {
+	public void aloita() {
+		while (true) {
 		viivanseuraaja.seuraaViivaLoppuun();
-		moottorit.liikuEteenpain(150, 80);
-		etsiRisteydenHaarat();
-		kaannySuuntaanRisteydessa(-1);
-		moottorit.pysahdy();
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//Liikutaan risteyksen keskelle
+		Moottorit.liikuEteenpain(150, 80);
+		Moottorit.pysahdy();
+		String tuloste = "";
+		if (logiikka.seuraavaUusiRisteys()) {
+			Risteys lisattavaRisteys = uusiRisteys();
+			tuloste += lisattavaRisteys.toString() + " ";
+			logiikka.lisaaUusiRisteys(lisattavaRisteys);
 		}
+	
+		int suunta = logiikka.liikuSuuntaan();
+		LCD.clear();
+		LCD.drawString(tuloste + "r:" + logiikka.palautaRobotinSuunta() + "s:" + suunta, 0, 0);
+		//Nuku.nuku(1000);
+		kaannySuuntaanRisteydessa(suunta);
 		}
 	}
 	
-	public void etsiRisteydenHaarat() {
-		moottorit.vasenKierroksetNollaa();
-		LCD.clear();
-		
-		int waitKaant = 0;
-		boolean teipilla = valosensori.onkoTeipilla();
-		Risteys r = new Risteys();
-		while (moottorit.vasenKierrokset() < Moottorinkierrokset.ympyra) {
-			if (waitKaant < moottorit.vasenKierrokset() && valosensori.onkoTeipilla()) {
-				int kierrokset = moottorit.vasenKierrokset();
-				if (kierrokset < Moottorinkierrokset.) {
-					r.lisaaSuunta(0);;
-				} else if (kierrokset < Moottorinkierrokset.oikeaAlazVali) {
-					r.lisaaSuunta(1);
-				} else if (kierrokset < Moottorinkierrokset.oikeaAlasVali) {
-				} else if (kierrokset < Moottorinkierrokset.alasVasenVali) {
-					r.lisaaSuunta(-1);
+	private Risteys uusiRisteys() {
+		Moottorit.vasenKierroksetNollaa();
+		int odotaKierroksen = 0;
+		Risteys uusiRisteys = new Risteys();
+		//Pyöritään 360 astetta etsien kaikki risteyden suunnat
+		Moottorit.pyoriSuuntaan(true, 80);
+		while (Moottorit.vasenKierrokset() < Suunnat.ympyra) {
+			//Moottorin kierrokset yli odotettavan liikkeen ja musta teippi löydett:
+			if (odotaKierroksen < Moottorit.vasenKierrokset() && valosensori.onkoTeipilla()) {
+				int kierrokset = Moottorit.vasenKierrokset();
+				int suunta = Suunnat.palautaSuunta(kierrokset);
+				
+				//Jos suunta on 2 (taakseppäin), se on robotin tulosuunta risteykseen. 
+				if (suunta == 2) {
+					uusiRisteys.lisaaTulosuunta(logiikka.palautaRobotinSuunta());
+				} else {
+					//Uusi suunta risteykselle
+					Sound.playTone(1000, 100, 100);
+					uusiRisteys.lisaaSuunta(logiikka.oikeaSuuntaRisteys(suunta));
 				}
-				waitKaant = moottorit.vasenKierrokset() + 200;
-				Sound.playTone(1000, 100, 100);
+				odotaKierroksen = kierrokset + 200;		
 			}
-			moottorit.pyoriSuuntaan(true, 80);
-			teipilla = valosensori.onkoTeipilla();
 		}
 		
-		LCD.drawString(r.toString(), 0, 0);
-		moottorit.pysahdy();
+		Moottorit.pysahdy();
+		return uusiRisteys;
 	}
 	//suoraan: 0, oikea: 1, alas: 2, vasen: -1
 	private void kaannySuuntaanRisteydessa(int suunta) {
-		int kierroksetRajaan;
-		if (suunta == 0) {
-			kierroksetRajaan = 0;
-		} else if (suunta == 1) {
-			kierroksetRajaan = 100;
-		} else if (suunta == 2) {
-			kierroksetRajaan = 364;
-		} else if (suunta == -1) {
-			kierroksetRajaan = 640;
-		} else {
-			kierroksetRajaan = -1;
-		}
+		//Suunta eteenpäin, ei tarvitse kääntyä;
+		if (suunta == 0) return;
 		
-		moottorit.vasenKierroksetNollaa();
-		moottorit.pyoriSuuntaan(true, 80);
-		while(moottorit.vasenKierrokset() < kierroksetRajaan) { }
+		int kierroksetRajaan = Suunnat.palautaKierroksetRajaan(suunta);
+		
+		Moottorit.vasenKierroksetNollaa();
+		
+		if (kierroksetRajaan > 0) {
+		Moottorit.pyoriSuuntaan(true, 80);
+		
+		while(Moottorit.vasenKierrokset() < kierroksetRajaan) { }
+		} else {
+			Moottorit.pyoriSuuntaan(false, 80);
+			while(Moottorit.vasenKierrokset() > kierroksetRajaan) { }
+		}
 		while(!valosensori.onkoTeipilla()) { }
+		
+		Moottorit.pysahdy();
 	}
-
 }

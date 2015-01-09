@@ -1,39 +1,41 @@
 package labyrintinratkaisija;
 
-import laitehallinta.Moottorienhallinta;
+import laitehallinta.Moottorit;
 import laitehallinta.Valolukija;
 import lejos.nxt.Button;
 import lejos.nxt.Sound;
 
 public class Viivanseuraaja {
 	
-	private Moottorienhallinta moottori;
 	private Valolukija valo;
 	
-	public Viivanseuraaja(Moottorienhallinta m, Valolukija v) {
-		this.moottori = m;
+	public Viivanseuraaja(Valolukija v) {
 		this.valo = v;
 	}
 	
 	public void seuraaViivaLoppuun() {
+		Moottorit.vasenKierroksetNollaa();
+		Moottorit.oikeaKierroksetNollaa();
+		
 		int kaantymisvoima = 80;
 		
 		while(true) {
-			int tachoArvo;
+			int kierrokset;
 			if (!valo.onkoTeipilla()) {
-				moottori.kaannyOikealle(kaantymisvoima);
+				Moottorit.kaannyOikealle(kaantymisvoima);
 		
-				moottori.oikeaKierroksetNollaa();
-				tachoArvo = moottori.vasenKierrokset();
+				Moottorit.oikeaKierroksetNollaa();
+				kierrokset = Moottorit.vasenKierrokset();
 			} else {
-				moottori.kaannyVasemmalle(kaantymisvoima);
+				Moottorit.kaannyVasemmalle(kaantymisvoima);
 				
-				moottori.vasenKierroksetNollaa();
-				tachoArvo = moottori.oikeaKierrokset();
+				Moottorit.vasenKierroksetNollaa();
+				kierrokset = Moottorit.oikeaKierrokset();
 			}
 			
-			if (tachoArvo > 120) {
-				korjaaYlikaannos(tachoArvo-40, 80);
+			if (kierrokset > 160) {
+				Moottorit.pysahdy();
+				korjaaYlikaannos(kierrokset-40, 80);
 				break;
 			}
 		}
@@ -41,13 +43,15 @@ public class Viivanseuraaja {
 	}
 	
 	private void korjaaYlikaannos(int kierrokset, int voima) {
-		moottori.vasenKierroksetNollaa();
+		Moottorit.vasenKierroksetNollaa();
 		Sound.playTone(500, 1000, 100);
 		
-		while(kierrokset * -1 < moottori.vasenKierrokset() && !Button.ENTER.isPressed()) {
+		while(kierrokset * -1 < Moottorit.vasenKierrokset() && !Button.ENTER.isPressed()) {
 			//korjataan taakseppäin ylimennyt
-			moottori.kaannyTaakseppainVasemmalle(voima);
+			Moottorit.kaannyTaakseppainVasemmalle(voima);
 		}
+		
+		Moottorit.pysahdy();
 	}
 
 }
