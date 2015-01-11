@@ -6,6 +6,8 @@ Labyrintinratkaija ropotti on robotti, joka itsenäisesti kulkee viivoista muodo
 
 Robotti liikkuu labyrinttia pitkin ja valitsee risteyksestä suuntia järjestyksessä: oikea, ylös, vasen ja lopuksi palaa tulosiintaansa. Suunnat ovat aloitussuunnan mukaisia eikä risteyksien. Jos risteys päätyy umpikujan tai kaikki mahdolliset suunnat on kokeiltu, robotti palaa takaisin tulosuuntaansa pitkin edelliseen risteykseen.
 
+####[YouTube-video robotin toiminnasta](https://www.youtube.com/watch?v=YBiAe8eqNy0)
+
 ##Robotin rakenne:
 
 Robotti on auton tapainen laite, joka kulkee itsenäisesti.Siinä on kaksi moottoria, valosensori ja takana on moottoriton pyörä sivuttaissuunnassa. Tarkempia kuvia kasausohjeissa.
@@ -29,11 +31,13 @@ Syklejä ei saa esiintyä labyrintissa. Robotti ei tue tällä hetkellä syklill
 
 ##Koodin rakenne
 
+Lyhyt katsaus koodin toimintaan. Javadocs pitää sisällään tarkempaa tietoa koodista. Löytyy kansiosta <b>/docs/javadoc</b>.
+
 Koodi on jaettu kolmeen pakettiin: labyrintinratkaisija, laitehallinta ja main.
 
 <b>Laitehallinta</b>
 
-Javadoc löytyy kansiosta. <b>KANSIO!!!</b>
+
 
 Paketissa on kaikki oleellinen robotin laitteiden hallintaa: moottorit, valosensori ja satunnaiset toiminnot (luokassa Robotti).
 
@@ -44,9 +48,23 @@ Paketissa on kaikki oleellinen robotin laitteiden hallintaa: moottorit, valosens
 
 <b>labyrintinratkaisija</b>
 
+*__Labyrintinratkaisija_ - Luokka on yhdistää toimintoja ja pitää sisällään päätoiminnot: 
+*__Logiikka__* - Sisältää kaiken logiikan labyrintissa liikkumista varten. Pinoaa robootin edellisiä risteyksiä pinoon.
+*__Risteys__* - Kuvaus risteyksestä. Risteykseen voi listätä suuntia, palauttaa seuraavaksi mentävän suunnan risteyksestä ja antaa tietoa siitä, että onko kaikki risteyden suunnat käyty.
+*__Suunnat__* - Luokka pitää sisällään suuntiin liittyvää toiminnallisuutta. Muuntaa mm. moottorien kierroksia suunta numeroiksi.
+*__Viivanseuraaja__* - Toteuttaa viivanseuraamistoiminnon. Metodi seuraaviivaLoppuun() seuraa viivaa loppumiseen asti ja korjaa ylimenneen liikkeen viivan yli. Viivanseuraaja kääntyy hieman oikealle, kun robotti lukee lattian arvoa, ja kääntyy hieman vasemmalle, kun lukee teipin arvoa. Liike on nykivää. 
+
 <b>main</b>
 
 Sisältää main luokan.
+
+<b>Lyhyt kuvaus ohjelman toiminnasta:<b/>
+
+Main luo uuden Labyrintinratkaisija olion ja kutsuu luokan aloita-metodia. Labyrintinratkaisija luo Valolukija, Viivanseuraaja ja Logiikka luokat. Aloita metodi kutsuu valosensorin metodia lueValot(), joka lukee lattian, teipin ja maalin valoarvot. Tämän jälkeen kutsutaan metodia ratkaise(). Metodi pitää sisälllään pää loopin, joka toistaa toiminnot: viivanseuraaja.seuraaViivaaLoppuun(), liikuRisteykseen(), lisää uuden risteyden jos logiikka-luokan seuraavaUusiRisteys on tosi ja käännySuuntaanRisteydessä(), jossa suunnaksi valitaan logiikkaluokan liikuSuuntaan metodin palauttama suunta. 
+
+Ratkaisu-metodin päälooppi on ikuinen. Ohjelman lopettamisen hoitaa joko logiikka-luokan metodi palautaSuunta, joka huomaa milloin labyrintilla ei ole ratkaisua tai Labyrintinratkaisuluokan liikuristeykseen-metodi, joka huomaa robotin saapuneen maaliin.
+
+
 
 
 
@@ -113,11 +131,13 @@ Tulos: testi onnistu, robotti käy kaikkia mahdollisia reittejä läpi, kunnes l
 
 ##Rajoitukset ja tulevaisuus
 
-Labyrintin rakenne itsessään aiheuttaa paljon rajoitteita, koska robotti pystyy kulkemaan vain tietynlaisessa labyrintissa: risteydet tulee merkitä tarkoin labyrintin rakenne -kohdan mukaan. Virheet labyrinti kokoamisessa aiheuttaa varmasti ei-toivottuja toimintoja. Robotin voi kuitenkin pysäyttää painamalla enter-painiketta. Labyrintti täytyy myös olla syklitön, koska projekti ei ehtinyt edetä sinne asti. Tulevaisuudessa robotti voisi ratkaista myös syksillisiä labyrintteja.
+Labyrintin rakenne itsessään aiheuttaa paljon rajoitteita, koska robotti pystyy kulkemaan vain tietynlaisessa labyrintissa: risteydet tulee merkitä tarkoin labyrintin rakenne -kohdan mukaan. Pienetkin virheet labyrinti kokoamisessa aiheuttaa varmasti ei-toivottuja toimintoja. Robotti voi luulla päätyneensä risteykseen, vaikka ei ole päätynyt. Ohjelman voi kuitenkin pysäyttää painamalla enter-painiketta. Labyrintti täytyy myös olla syklitön, koska projekti ei ehtinyt edetä sinne asti. Tulevaisuudessa robotti voisi ratkaista myös syksillisiä labyrintteja.
 
 Robotin rakenne on myös rajoite, sillä ohjelma toimii vain ja ainoastaan kyseisen robotin rakenteella. Moottorien hallinnassa olisi kannattanut käyttää Pilottia ja settaa sille renkaiden etäisyydet, eikä lukea käännöksiä moottorien kierroksien avulla kuten tein. Tätä voisi jatkokehittää. 
 
 Tällä hetkellä robotti kulkee labyrinttia itsenäisesti, eikä kommunikoi minkäänlaisen laitteen kanssa. Tätä voisi jatkokehittää, paljon. Robotti voisi esimerkiksi lähettää tietoa sijainnista, edistymisestään ja piirtää kartan labyrintista. Kartta voisi sisältää lyimmän reitin labyrintista ulos. Labyrinttiin voisi myös asettaa esineitä, joita robotti etsii.
+
+Robotin sivuttaissuunnassa liikkuva takapyörä on hieman huono ratkaisu ja aiheuttaa kitkaa liikkuessaan eteenpäin. Tätä voisi parannella.
 
 
 
