@@ -1,4 +1,4 @@
-#KESKEN!!!
+#Labyrintinratkaisija ropotti
 
 ![](http://www.cs.helsinki.fi/u/antthaap/joulurobo/ropotti.jpg)
 
@@ -48,15 +48,15 @@ Paketissa on kaikki oleellinen robotin laitteiden hallintaa: moottorit, valosens
 
 <b>labyrintinratkaisija</b>
 
-*__Labyrintinratkaisija__ - Luokka on yhdistää toimintoja ja pitää sisällään päätoiminnot.
+* __Labyrintinratkaisija__ - Luokka on yhdistää toimintoja ja pitää sisällään päätoiminnot.
 
-*__Logiikka__ - Sisältää kaiken logiikan labyrintissa liikkumista varten. Pinoaa robootin edellisiä risteyksiä pinoon.
+* __Logiikka__ - Sisältää kaiken logiikan labyrintissa liikkumista varten. Pinoaa robootin edellisiä risteyksiä pinoon.
 
-*__Risteys__ - Kuvaus risteyksestä. Risteykseen voi listätä suuntia, palauttaa seuraavaksi mentävän suunnan risteyksestä ja antaa tietoa siitä, että onko kaikki risteyden suunnat käyty.
+* __Risteys__ - Kuvaus risteyksestä. Risteykseen voi listätä suuntia, palauttaa seuraavaksi mentävän suunnan risteyksestä ja antaa tietoa siitä, että onko kaikki risteyden suunnat käyty.
 
-*__Suunnat__ - Luokka pitää sisällään suuntiin liittyvää toiminnallisuutta. Muuntaa mm. moottorien kierroksia suunta numeroiksi.
+* __Suunnat__ - Luokka pitää sisällään suuntiin liittyvää toiminnallisuutta. Muuntaa mm. moottorien kierroksia suunta numeroiksi.
 
-*__Viivanseuraaja__ - Toteuttaa viivanseuraamistoiminnon. Metodi seuraaviivaLoppuun() seuraa viivaa loppumiseen asti ja korjaa ylimenneen liikkeen viivan yli. Viivanseuraaja kääntyy hieman oikealle, kun robotti lukee lattian arvoa, ja kääntyy hieman vasemmalle, kun lukee teipin arvoa. Liike on nykivää. 
+* __Viivanseuraaja__ - Toteuttaa viivanseuraamistoiminnon. Metodi seuraaviivaLoppuun() seuraa viivaa loppumiseen asti ja korjaa ylimenneen liikkeen viivan yli. Viivanseuraaja kääntyy hieman oikealle, kun robotti lukee lattian arvoa, ja kääntyy hieman vasemmalle, kun lukee teipin arvoa. Liike on nykivää. 
 
 <b>main</b>
 
