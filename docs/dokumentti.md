@@ -1,5 +1,6 @@
 #KESKEN!!!
 
+![](http://www.cs.helsinki.fi/u/antthaap/joulurobo/ropotti.jpg)
 
 Labyrintinratkaija ropotti on robotti, joka itsenäisesti kulkee viivoista muodostettua labyrinttia pitkin etsien ratkaisua eli ulospääsyä labyrintista. Ratkaisun löydettyä robotti ilmoittaa päässeensä maaliin ja lopettaa etsimisen. Jos ratkaisua ei löydy, ilmoittaa robotti myös siitä.
 
@@ -9,7 +10,27 @@ Robotti on kulkuneuvo, jossa on kaksi moottoria, valosensori ja takana on mootto
 
 ##Labyrintin rakenne:
 
+![](http://www.cs.helsinki.fi/u/antthaap/joulurobo/labyrintti_1.jpg)
+
 Labyrintin kootaan käyttäen kahdenlaista teippiä. Mustalla sähköteipillä merkitään labyrintin kulkureitit ja heijastavalla teipillä merkitään labyritin päätepiste. Mustan maalarinteipin täytyy olla tummempi kuin lattia ja heijastavan teipin tulisi heijastaa enemmän valoa kuin lattia. Robotti tarkistaa lattian, sähköteipin ja heijastavan teipin valoarvojen oikeellisuuden, eli teippien valoarvojen tarpeellisen eroavuuden, ohjelman alussa.
+
+
+##Koodin rakenne
+
+Koodi on jaettu kolmeen pakettiin: labyrintinratkaisija, laitehallinta ja main.
+
+<b>Laitehallinta</b>
+
+Paketissa on kaikki oleellinen robotin laitteiden hallintaa: moottorit, valosensori ja satunnaiset toiminnot (luokassa Robotti).
+
+* __LaitePortit__ - Luokka pitää sisälllään static-tyyppisiä muuttujat laitteiden porteille. MotorPort oikealle ja vasemmalle moottorille sekä SensorPort valosensorille. Jos portit muuttuvat robotissa, tähän luokkaan täytyy vain tehdä muutokset.
+* __oottorit__ - Pitää sisällään kaikki oleelliset toiminnot moottorien liikuttamiseen littyen. Kaikki metodit ovat static-tyyppisiä, eli luokkaa ei tarvitse käsitellä oliona.
+* __Valonlukija__ - Valonlukija lukee valoarvot teipille, lattialle ja labyrintin maalille. Näiden arvojen avulla tehdään raja-arvot teipin valoarvon ja lattian valoarvon välille, sekä maalin valoarvon ja lattian valoarvon välille. Raja-arvoja käyttää metodit onkoTeipillä ja onkoMaalissa metodit palauttaa totuusarvon valosensorin nykyisen arvon tilasta.
+* __Robotti__ - Luokassa on satunnaisia tarvittavia metodeja, jotka toteuttavat satunnaisia hyödyllisiä toimintoja. Toimonnot ovat: nuku, lopetaOhjelma, kirjoitaViesti.
+
+<b>labyrintinratkaisija</b>
+
+<b>main</b>
 
 
 
