@@ -1,7 +1,11 @@
 package labyrintinratkaisija;
 
-import laitehallinta.Virhetilanne;
-
+/**
+ * Luokka kuvaa risteystä. Risteyteen voi lisätä uusia suunita, saada seuraavaksi mentävän risteyden
+ * ja tietoa siitä, että onko kaikki risteyden suuntia käyty jo.
+ * @author Antti
+ *
+ */
 public class Risteys {
 	
 	private boolean oikea; //1
@@ -11,14 +15,28 @@ public class Risteys {
 	private int tulosuunta;
 	private boolean kaikkiKayty;
 	
+	/**
+	 * Lisää risteykseen robotin tulosuunnan.
+	 * @param tulosuunta Tulosuunta risteykseen.
+	 */
 	public void lisaaTulosuunta(int tulosuunta) {
 		this.tulosuunta = tulosuunta;
 	}
 	
+	
+	/**
+	 * Palauttaa robotin tulosuunnan risteykseen.
+	 * @return robotin tulosuunta risteykseen
+	 */
 	public int palautaTulosuunta() {
 		return this.tulosuunta;
 	}
 	
+	
+	/**
+	 * Lisää risteykseen suunnan.
+	 * @param suunta Uusi suunta.
+	 */
 	public void lisaaSuunta(int suunta) {
 		if (suunta == 1) {
 			oikea = true;
@@ -31,6 +49,10 @@ public class Risteys {
 		} 
 	}
 	
+	/**
+	 * Palauttaa seuraavaksi käytävän suunnan. Sunnat palautetaan järjestyksessä oikea, ylös, vasen ja lopuksi tulosuunta.
+	 * @return seuraava suunta
+	 */
 	public int palautaSuunta() {
 		if (oikea) {
 			oikea = false;
@@ -53,11 +75,17 @@ public class Risteys {
 		}
 	}
 	
+	/**
+	 * Kertoo onko risteyksen kaikissa suunnissa käyty.
+	 * @return onko kaikki suunnat käyty
+	 */
 	public boolean kaikkiKayty() {
 		return kaikkiKayty;
 	}
 	
-	
+	/**
+	 * Palauttaa merkkijonon risteyden tilasta. Palauttaa merkin suunnan, jos siellä ei ole käyty, ja lopuksi tulosuunnan.
+	 */
 	public String toString() { 
 		String s = "";
 		if (oikea) s+= "o";
